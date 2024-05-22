@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../SERVICE/auth.service';
 import { AuthenticationRequest } from '../SERVICE/authentication-request';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../SERVICE/authentication.service';
@@ -29,7 +28,9 @@ export class LoginComponent {
     }).subscribe({
       next: (res) => {
         this.tokenService.token = res.token as string;
-        this.router.navigate(['admin']);
+        if (this.tokenService.userRoles.includes("USER")) {
+          this.router.navigate(['admin']);
+        }
       },
       error: (err) => {
         console.log(err);
