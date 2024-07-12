@@ -33,11 +33,15 @@ import {MatNativeDateModule} from "@angular/material/core"
 import {MatRadioModule} from "@angular/material/radio"
 import {MatCheckboxModule} from "@angular/material/checkbox"
 import {MatDialogModule} from "@angular/material/dialog";
-import { HomeComponent } from './home/home.component'
+import { HomeComponent } from './home/home.component';
+import { ActivateAccountComponent } from './activate-account/activate-account.component'
+import { CodeInputModule } from 'angular-code-input';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [  //les composants
-    AppComponent, LoginComponent, RegisterComponent, AdminComponent, MembreComponent, CoachComponent, HomeComponent
+    AppComponent, LoginComponent, RegisterComponent, AdminComponent, MembreComponent, CoachComponent, HomeComponent, ActivateAccountComponent
   ],
   imports: [  // les modules
     BrowserModule,
@@ -46,6 +50,7 @@ import { HomeComponent } from './home/home.component'
     MatIconModule,
     MatToolbarModule,
     HttpClientModule, // pour les requêtes API
+    CodeInputModule,
 
     MatInputModule,
     MatSelectModule,
@@ -66,7 +71,9 @@ import { HomeComponent } from './home/home.component'
     MatNativeDateModule,
     MatRadioModule,
     MatCheckboxModule,
-    MatDialogModule
+    MatDialogModule,
+    MatDividerModule,
+    MatFormFieldModule
   ],
   providers: [
     provideAnimationsAsync()

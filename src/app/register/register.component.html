@@ -1,1 +1,65 @@
-<p>register works!</p>
+<!-- register.component.html -->
+<div class="register-container">
+  <mat-card class="register-card">
+    <h3 class="text-center">Créer un compte</h3>
+    <mat-divider></mat-divider>
+    <div *ngIf="errorMsg.length">
+      <mat-card *ngFor="let msg of errorMsg" class="error-card">
+        <p>{{ msg }}</p>
+      </mat-card>
+    </div>
+    <div class="mb-3">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nom</mat-label>
+        <input
+          matInput
+          [(ngModel)]="registerRequest.nom"
+          type="text"
+          placeholder="Nom"
+        />
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Prénom</mat-label>
+        <input
+          matInput
+          [(ngModel)]="registerRequest.prenom"
+          type="text"
+          placeholder="Prénom"
+        />
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Adresse mail</mat-label>
+        <input
+          matInput
+          [(ngModel)]="registerRequest.mail"
+          type="email"
+          placeholder="name@example.com"
+        />
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Mot de passe</mat-label>
+        <input
+          matInput
+          [(ngModel)]="registerRequest.mdp"
+          type="password"
+          placeholder="Mot de passe"
+        />
+      </mat-form-field>
+    </div>
+    <div class="d-flex justify-content-between mb-3">
+      <button mat-raised-button color="primary" (click)="register()">
+        <mat-icon>person_add</mat-icon>&nbsp;Créer un compte
+      </button>
+    </div>
+    <div class="d-flex justify-content-between mb-3">
+        Already have an account?
+        <button mat-button (click)="login()">Login</button>
+      </div>
+  </mat-card>
+</div>

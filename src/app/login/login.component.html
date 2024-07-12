@@ -1,46 +1,35 @@
-<!-- src/app/login/login.component.html -->
-<!-- <div class="container">
-    <h2>Connexion</h2>
-    <form (ngSubmit)="onSubmit()">
-      <div class="mb-3">
-        <label for="email" class="form-label">Adresse e-mail</label>
-        <input type="email" class="form-control" id="email" name="email" required [(ngModel)]="user.mail">
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Mot de passe</label>
-        <input type="password" class="form-control" id="password" name="password" required [(ngModel)]="user.mdp">
-      </div>
-      <div class="d-flex justify-content-between">
-        <button type="submit" class="btn btn-primary">Se connecter</button>
-        <a class="btn btn-secondary" href="/register">S'inscrire</a>
-      </div>
-    </form>
-  </div>
-   -->
-
-   <div class="container-fluid card login-container">
+<!-- login.component.html -->
+<div class="login-container">
+  <mat-card class="login-card">
     <h3 class="text-center">Login</h3>
-    <hr>
-    <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
-      <p *ngFor="let msg of errorMsg">{{msg}}</p>
+    <mat-divider></mat-divider>
+    <div *ngIf="errorMsg.length">
+      <mat-card *ngFor="let msg of errorMsg" class="error-card">
+        <p>{{msg}}</p>
+      </mat-card>
     </div>
     <div class="mb-3">
-      <label for="login" class="form-label">Email address</label>
-      <input [(ngModel)]="authRequest.mail"  type="email" class="form-control" id="login" placeholder="name@example.com">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email address</mat-label>
+        <input matInput [(ngModel)]="authRequest.mail" type="email" placeholder="name@example.com">
+      </mat-form-field>
     </div>
     <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input [(ngModel)]="authRequest.mdp" type="password" class="form-control" id="password" placeholder="Password">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput [(ngModel)]="authRequest.mdp" type="password" placeholder="Password">
+      </mat-form-field>
     </div>
     <div class="d-flex justify-content-between mb-3">
-      <button (click)="login()" type="button" class="btn btn-primary">
-        <em class="fas fa-sign-in-alt">&nbsp;Sign in</em>
+      <button mat-raised-button color="primary" (click)="login()">
+        <mat-icon>login</mat-icon>&nbsp;Sign in
       </button>
       <div>
         Don't have an account?&nbsp;
-        <button (click)="register()" type="button" class="btn btn-link">
+        <button mat-button (click)="register()">
           Register
         </button>
       </div>
     </div>
-  </div>
+  </mat-card>
+</div>
