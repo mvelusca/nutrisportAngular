@@ -21,7 +21,7 @@ export class LoginComponent {
   ) {
   }
 
-  login() {
+  public login() {
     this.errorMsg = [];
     this.authService.authenticate({
       body: this.authRequest
@@ -43,7 +43,7 @@ export class LoginComponent {
     });
   }
 
-  register() {
-    this.router.navigate(['register']);
+  public register() {
+    this.router.navigate(['/register']);
   }
 }

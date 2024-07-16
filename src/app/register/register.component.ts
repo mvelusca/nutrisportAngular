@@ -19,11 +19,11 @@ export class RegisterComponent {
   ) {
   }
 
-  login() {
+  public login() {
     this.router.navigate(['login']);
   }
 
-  register() {
+  public register() {
     this.errorMsg = [];
     this.authService.register({
       body: this.registerRequest
