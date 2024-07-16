@@ -16,8 +16,8 @@ import { ActivateAccountComponent } from './activate-account/activate-account.co
 import { CodeInputModule } from 'angular-code-input';
 import { RouterModule } from '@angular/router';
 import { DropdownToggleDirective } from './directives/dropdown-toggle.directive';
-import { AriaLabelledbyDirective } from './directives/aria-labelledby.directive';
 import { CommonModule } from '@angular/common';
+import { AriaLabelledbyDirective } from './directives/aria-labelledby.directive';
 
 
 @NgModule({ 
