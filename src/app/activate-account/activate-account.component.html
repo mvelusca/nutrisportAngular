@@ -26,3 +26,31 @@
     </div>
   </ng-template>
  -->
+
+ <div class="container mx-auto" *ngIf="submitted; else codeForm">
+  <div class="text-center" *ngIf="isOkay; else activationError">
+    <div class="bg-green-100 text-green-700 p-4 rounded-lg">
+      <h2 class="text-xl font-semibold">Activation Successful!</h2>
+      <p class="mt-2">Your account has been successfully activated.</p>
+      <button class="mt-4 btn btn-primary" (click)="redirectToLogin()">Go to Login</button>
+    </div>
+  </div>
+  <ng-template #activationError>
+    <div class="bg-red-100 text-red-700 p-4 rounded-lg">
+      <h2 class="text-xl font-semibold">Activation Failed!</h2>
+      <p class="mt-2">{{ message }}</p>
+      <button class="mt-4 btn btn-primary" (click)="submitted = false">Try again</button>
+    </div>
+  </ng-template>
+</div>
+<ng-template #codeForm>
+  <div class="container mx-auto text-center" style="width: 400px;">
+    <h2 class="text-2xl font-semibold">Type your activation code</h2>
+    <code-input [isCodeHidden]="false"
+                [codeLength]="6"
+                [code]="'number'"
+                (codeCompleted)="onCodeCompleted($event)">
+    </code-input>
+    <button class="mt-3 btn btn-primary" (click)="redirectToLogin()">Go to Login</button>
+  </div>
+</ng-template>

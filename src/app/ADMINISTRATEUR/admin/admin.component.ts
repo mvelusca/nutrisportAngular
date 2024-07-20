@@ -9,8 +9,13 @@ import { Subscription } from 'rxjs';
 })
 export class AdminComponent implements OnInit {
 
+  headerTable: String[] = [
+    "ID","Name","Email","Actions"
+  ];
   users: User[] = [];
   private usersSubscription: Subscription | undefined;
+  isModalOpen: boolean = false;
+  selectedUser: User | undefined;
 
   constructor(private userService: UserService) { }
 
@@ -34,6 +39,46 @@ export class AdminComponent implements OnInit {
     // Assurez-vous de désabonner l'observable pour éviter les fuites de mémoire
     if (this.usersSubscription) {
       this.usersSubscription.unsubscribe();
+    }
+  }
+
+  editUser(userId: number): void {
+    console.log('Edit user:', userId);
+    // Add your edit logic here
+  }
+
+  openEditModal(user: User): void {
+    this.selectedUser = { ...user };
+    this.isModalOpen = true;
+  }
+
+  openDeleteModal(user: User): void {
+    this.selectedUser = { ...user };
+    this.isModalOpen = true;
+  }
+
+  openViewModal(user: User): void {
+    this.selectedUser = { ...user };
+    this.isModalOpen = true;
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.selectedUser = undefined;
+  }
+
+  updateUser(): void {
+    if (this.selectedUser) {
+      this.userService.updateUser(this.selectedUser.id, this.selectedUser).subscribe({
+        next: (updatedUser) => {
+          // Update the user list
+          this.loadUsers();
+          this.closeModal();
+        },
+        error: (error) => {
+          console.error('Error updating user:', error);
+        }
+      });
     }
   }
 

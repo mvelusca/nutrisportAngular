@@ -28,6 +28,24 @@ export function getUsers(http: HttpClient, rootUrl: string, context?: HttpContex
 
 getUsers.PATH = '/user/users';
 
+// Fonction pour effectuer la requête HTTP PUT et mettre à jour un utilisateur
+export function updateUser(http: HttpClient, rootUrl: string, id: number, user: User, context?: HttpContext): Observable<HttpResponse<User>> {
+  const rb = new RequestBuilder(rootUrl, updateUser.PATH.replace('{id}', id.toString()), 'put');
+  rb.body(user, 'application/json'); // Set the body here
+  return http.request(
+    rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context
+    })
+  ).pipe(
+    filter((r): r is HttpResponse<User> => r instanceof HttpResponse),
+    map((r: HttpResponse<User>) => r)
+  );
+}
+
+updateUser.PATH = '/user/{id}';
+
 // Service utilisateur
 @Injectable({ providedIn: 'root' })
 export class UserService extends BaseService {
@@ -56,4 +74,28 @@ export class UserService extends BaseService {
       map((r: HttpResponse<User[]>) => r.body as User[])
     );
   }
+
+  /**
+   * Cette méthode permet d'accéder à la réponse complète `HttpResponse` pour la mise à jour d'un utilisateur.
+   * Pour accéder uniquement au corps de la réponse, utilisez `updateUser()` à la place.
+   *
+   * Cette méthode envoie `application/json` et gère le corps de la requête de type `application/json`.
+   */
+  updateUser$Response(id: number, user: User, context?: HttpContext): Observable<HttpResponse<User>> {
+    return updateUser(this.http, this.rootUrl, id, user, context);
+  }
+
+  /**
+   * Cette méthode permet d'accéder uniquement au corps de la réponse.
+   * Pour accéder à la réponse complète (pour les en-têtes, par exemple), utilisez `updateUser$Response()` à la place.
+   *
+   * Cette méthode envoie `application/json` et gère le corps de la requête de type `application/json`.
+   */
+  updateUser(id: number, user: User, context?: HttpContext): Observable<User> {
+    return this.updateUser$Response(id, user, context).pipe(
+      map((r: HttpResponse<User>) => r.body as User)
+    );
+  }
+
+
 }
