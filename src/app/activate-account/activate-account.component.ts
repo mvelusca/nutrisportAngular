@@ -13,6 +13,8 @@ export class ActivateAccountComponent {
   message = '';
   isOkay = true;
   submitted = false;
+  digits = Array(6).fill('');
+  
   constructor(
     private router: Router,
     private authService: AuthenticationService
@@ -39,6 +41,11 @@ export class ActivateAccountComponent {
   }
 
   onCodeCompleted(token: string) {
+    this.confirmAccount(token);
+  }
+
+  onSubmit() {
+    const token = this.digits.join('');
     this.confirmAccount(token);
   }
 

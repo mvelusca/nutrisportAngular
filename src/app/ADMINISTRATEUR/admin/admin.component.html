@@ -1,6 +1,32 @@
 <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased h-screen flex items-center justify-center">
-   
-        <table class="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 shadow-lg rounded-lg overflow-hidden">
+    <div class="relative overflow-x-auto shadow-lg sm:rounded-lg">
+
+        <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
+            <div class="w-full md:w-1/2">
+              <form class="flex items-center">
+                <label for="simple-search" class="sr-only">Search</label>
+                <div class="relative w-full">
+                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                  <input type="text" id="simple-search" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required="">
+                </div>
+              </form>
+            </div>
+            <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
+              <button type="button" (click)="openAddModal()" class="flex items-center justify-center px-4 py-2 text-sm font-medium text-black dark:text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                <svg class="h-5 w-5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                </svg>
+                Add user
+              </button>
+                
+            </div>
+        </div>
+
+        <table class="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 overflow-hidden">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th *ngFor="let header of headerTable" scope="col" class="px-6 py-3">
@@ -14,18 +40,33 @@
                     <td class="px-6 py-4">{{ user.nom }}</td>
                     <td class="px-6 py-4">{{ user.mail }}</td>
                     <td class="px-6 py-4 text-right">
-                        <button (click)="openEditModal(user)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <button (click)="openDeleteModal(user)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <button (click)="openViewModal(user)" class="font-medium text-green-600 dark:text-green-500 hover:underline">View</button>
+                        <div class="flex justify-end space-x-2">
+                            <button (click)="openEditModal(user)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+                            <button (click)="openDeleteModal(user)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
+                            <button (click)="openViewModal(user)" class="font-medium text-green-600 dark:text-green-500 hover:underline">View</button>
+                        </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-
+        <!-- pagination -->
+        <nav class="flex items-center justify-between pt-4 pb-2 pr-2 pl-2" aria-label="Table navigation">
+            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Showing <span class="font-semibold text-gray-900 dark:text-white">{{ (currentPage - 1) * usersPerPage + 1 }}</span> to <span class="font-semibold text-gray-900 dark:text-white">{{ currentPage * usersPerPage > totalUsers ? totalUsers : currentPage * usersPerPage }}</span> of <span class="font-semibold text-gray-900 dark:text-white">{{ totalUsers }}</span></span>
+            <ul class="inline-flex -space-x-px text-sm h-8">
+                <li>
+                    <a href="javascript:void(0)" (click)="onPageChange(currentPage - 1)" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                </li>
+                <li *ngFor="let page of [].constructor(totalPages); let i = index">
+                    <a href="#" (click)="onPageChange(i + 1)" [class]="i + 1 === currentPage ? 'flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white' : 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'">
+                        {{ i + 1 }}
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" (click)="onPageChange(currentPage + 1)" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
         <!-- Modal -->
         <div *ngIf="isModalOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-modal">
             <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -48,6 +89,52 @@
                         </form>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Delete Modal -->
+        <div *ngIf="deleteModalIsOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-delete-modal">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3 text-center">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Delete User</h3>
+                    <div *ngIf="selectedUser" class="mt-2 px-7 py-3">
+                        <p>Are you sure you want to delete "{{ selectedUser.nom }}"?</p>
+                        <div class="flex justify-end">
+                            <button type="button" (click)="closeDeleteModal()" class="bg-gray-500 hover:bg-gray-700 text-white hover-text 
+                            font-bold py-2 px-4 rounded mr-2">Cancel</button>
+                            <button type="button" (click)="deleteUser()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add User Modal -->
+        <div *ngIf="addModalIsOpen" class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-gray-800 bg-opacity-75">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-lg">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Add New User</h2>
+                <form (ngSubmit)="submitAddUser()">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-1" for="name">Name</label>
+                        <input type="text" id="name" [(ngModel)]="newUser.nom" name="name" required class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:ring-primary-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-1" for="email">Email</label>
+                        <input type="email" id="email" [(ngModel)]="newUser.mail" name="email" required class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:ring-primary-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-1" for="password">Password</label>
+                        <input type="password" id="password" [(ngModel)]="newUser.mdp" name="password" required class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:ring-primary-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-1" for="photo">Photo</label>
+                        <input type="file" id="photo" (change)="onFileSelected($event)" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:ring-primary-500">
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" (click)="closeAddModal()" class="px-4 py-2 mr-2 text-sm font-medium text-gray-700 dark:text-white bg-gray-200 dark:bg-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-500">Cancel</button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-primary-600 dark:focus:ring-primary-500">Add User</button>
+                    </div>
+                </form>
             </div>
         </div>
     

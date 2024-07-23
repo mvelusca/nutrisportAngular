@@ -11,7 +11,16 @@ export interface User {
   id: number;
   nom: string;
   mail: string;
+  mdp: string;
+  photo: string;
   // Ajoutez d'autres champs si nécessaire
+}
+
+export interface AddUser{
+  nom: string;
+  mail: string;
+  mdp: string;
+  photo: string;
 }
 
 // Fonction pour effectuer la requête HTTP et récupérer les utilisateurs
@@ -45,6 +54,41 @@ export function updateUser(http: HttpClient, rootUrl: string, id: number, user: 
 }
 
 updateUser.PATH = '/user/{id}';
+
+// Fonction pour effectuer la requête HTTP DELETE et supprimer un utilisateur
+export function deleteUser(http: HttpClient, rootUrl: string, id: number, context?: HttpContext): Observable<HttpResponse<void>> {
+  const rb = new RequestBuilder(rootUrl, deleteUser.PATH.replace('{id}', id.toString()), 'delete');
+  return http.request(
+    rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context
+    })
+  ).pipe(
+    filter((r): r is HttpResponse<void> => r instanceof HttpResponse),
+    map((r: HttpResponse<void>) => r)
+  );
+}
+
+deleteUser.PATH = '/user/{id}';
+
+// Fonction pour effectuer la requête HTTP POST et ajouter un utilisateur
+export function addUser(http: HttpClient, rootUrl: string, user: AddUser, context?: HttpContext): Observable<HttpResponse<AddUser>> {
+  const rb = new RequestBuilder(rootUrl, addUser.PATH, 'post');
+  rb.body(user, 'application/json');
+  return http.request(
+    rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context
+    })
+  ).pipe(
+    filter((r): r is HttpResponse<AddUser> => r instanceof HttpResponse),
+    map((r: HttpResponse<AddUser>) => r)
+  );
+}
+
+addUser.PATH = '/user/add';
 
 // Service utilisateur
 @Injectable({ providedIn: 'root' })
@@ -94,6 +138,50 @@ export class UserService extends BaseService {
   updateUser(id: number, user: User, context?: HttpContext): Observable<User> {
     return this.updateUser$Response(id, user, context).pipe(
       map((r: HttpResponse<User>) => r.body as User)
+    );
+  }
+
+  /**
+   * Cette méthode permet d'accéder à la réponse complète `HttpResponse` pour la suppression d'un utilisateur.
+   * Pour accéder uniquement au corps de la réponse, utilisez `deleteUser()` à la place.
+   *
+   * Cette méthode envoie `application/json` et gère le corps de la requête de type `application/json`.
+   */
+  deleteUser$Response(id: number, context?: HttpContext): Observable<HttpResponse<void>> {
+    return deleteUser(this.http, this.rootUrl, id, context);
+  }
+
+  /**
+   * Cette méthode permet d'accéder uniquement au corps de la réponse.
+   * Pour accéder à la réponse complète (pour les en-têtes, par exemple), utilisez `deleteUser$Response()` à la place.
+   *
+   * Cette méthode envoie `application/json` et gère le corps de la requête de type `application/json`.
+   */
+  deleteUser(id: number, context?: HttpContext): Observable<void> {
+    return this.deleteUser$Response(id, context).pipe(
+      map((r: HttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Cette méthode permet d'accéder à la réponse complète `HttpResponse` pour l'ajout d'un utilisateur.
+   * Pour accéder uniquement au corps de la réponse, utilisez `addUser()` à la place.
+   *
+   * Cette méthode envoie `application/json` et gère le corps de la requête de type `application/json`.
+   */
+  addUser$Response(user: AddUser, context?: HttpContext): Observable<HttpResponse<AddUser>> {
+    return addUser(this.http, this.rootUrl, user, context);
+  }
+
+  /**
+   * Cette méthode permet d'accéder uniquement au corps de la réponse.
+   * Pour accéder à la réponse complète (pour les en-têtes, par exemple), utilisez `addUser$Response()` à la place.
+   *
+   * Cette méthode envoie `application/json` et gère le corps de la requête de type `application/json`.
+   */
+  addUser(user: AddUser, context?: HttpContext): Observable<AddUser> {
+    return this.addUser$Response(user, context).pipe(
+      map((r: HttpResponse<AddUser>) => r.body as AddUser)
     );
   }
 
