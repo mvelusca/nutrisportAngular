@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User,AddUser, UserService } from '../../SERVICE/user.service';
+import { User,AddUser, Page, UserService } from '../../SERVICE/user.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,11 +14,12 @@ export class AdminComponent implements OnInit {
   ];
   users: User[] = [];
   newUser: AddUser = { nom: '', mail: '', mdp: '', photo: '' };
-  private usersSubscription: Subscription | undefined;
+  usersSubscription: Subscription | undefined;
   isModalOpen: boolean = false;
   selectedUser: User | undefined;
   deleteModalIsOpen: boolean = false;
   addModalIsOpen: boolean = false;
+  query: string = '';
 
   currentPage: number = 1;
   usersPerPage: number = 10;
@@ -29,7 +30,7 @@ export class AdminComponent implements OnInit {
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.loadUsers();
+    this.loadUsers(this.currentPage, this.usersPerPage);
   }
 
   /**
@@ -39,17 +40,15 @@ export class AdminComponent implements OnInit {
  * @description This function subscribes to the `getUsers` observable from the `UserService` and updates 
  * the local `users` array when the observable emits a new value. If an error occurs during the fetching process, it logs the error to the console.
  */
-  loadUsers(): void {
-    this.usersSubscription = this.userService.getUsers().subscribe({
-      next: (users: User[]) => {
-        this.users = users;
-        this.totalUsers = users.length;
-        this.totalPages = Math.ceil(this.totalUsers / this.usersPerPage);
-        this.updateUsersForCurrentPage();
-        console.log('Users:', this.users); // Utilisation de console.log pour vérifier les utilisateurs récupérés
+  loadUsers(page: number, size: number): void {
+    this.userService.getUsersPaginate(page - 1, size).subscribe({
+      next: (pageData: Page<User>) => {
+        this.users = pageData.content;
+        this.totalUsers = pageData.totalElements;
+        this.totalPages = pageData.totalPages;
       },
       error: (error) => {
-        console.error('Error fetching users:', error); // Gestion des erreurs
+        console.error('Error fetching users:', error);
       }
     });
   }
@@ -70,7 +69,7 @@ export class AdminComponent implements OnInit {
   onPageChange(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
-      this.updateUsersForCurrentPage();
+      this.loadUsers(this.currentPage, this.usersPerPage);
     }
   }
 
@@ -109,7 +108,7 @@ export class AdminComponent implements OnInit {
       this.userService.updateUser(this.selectedUser.id, this.selectedUser).subscribe({
         next: (updatedUser) => {
           // Update the user list
-          this.loadUsers();
+          this.loadUsers(this.currentPage, this.usersPerPage);
           this.closeModal();
         },
         error: (error) => {
@@ -133,7 +132,7 @@ export class AdminComponent implements OnInit {
       this.userService.deleteUser(this.selectedUser.id).subscribe({
         next: () => {
           // Remove the user from the list
-          this.loadUsers();
+          this.loadUsers(this.currentPage, this.usersPerPage);
           this.closeDeleteModal();
         },
         error: (error) => {
@@ -160,25 +159,45 @@ export class AdminComponent implements OnInit {
   }
 
   onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.newUser.photo = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
+  const file: File = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.newUser.photo = e.target.result;
+      const fileImage = document.getElementById('file-image') as HTMLImageElement;
+      const fileName = document.getElementById('file-name') as HTMLElement;
+      const filePreview = document.getElementById('file-preview') as HTMLElement;
+      const dropzoneContent = document.getElementById('dropzone-content') as HTMLElement;
+
+      fileImage.src = e.target.result;
+      fileName.textContent = file.name;
+
+      filePreview.classList.remove('hidden');
+      dropzoneContent.classList.add('hidden');
+      // Adding animation
+      setTimeout(() => {
+        fileImage.classList.remove('opacity-0');
+      }, 10); // Short delay to trigger transition
+    };
+    reader.readAsDataURL(file);
   }
+}
 
   submitAddUser(): void {
     this.userService.addUser(this.newUser).subscribe({
       next: (user) => {
-        this.loadUsers();
+        this.loadUsers(this.currentPage, this.usersPerPage);
         this.closeAddModal();
       },
       error: (error) => {
         console.error('Error adding user:', error);
       }
+    });
+  }
+
+  search() {
+    this.userService.searchUsers(this.query).subscribe(users => {
+      this.users = users;
     });
   }
 
