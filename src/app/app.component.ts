@@ -1,6 +1,8 @@
-import { Component, Injectable } from '@angular/core';
+import { Component, Injectable, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { initFlowbite } from 'flowbite';
+import { AuthenticationService } from './SERVICE/authentication.service';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +15,21 @@ export class AppComponent {
   title = 'nutrisportAngular';
   badgevisible = false;
   public login: boolean = true;
+  isLoggedIn: boolean = false;
 
-  constructor(private router: Router) { }
+  @ViewChild(SidebarComponent) sidebar!: SidebarComponent;
+
+  constructor(
+    public router: Router,
+    private authService: AuthenticationService,
+  ) { }
 
   ngOnInit(): void {
+
+    this.authService.isLoggedIn$.subscribe(value => {
+      this.isLoggedIn = value;
+    });
+
     initFlowbite();
 
     // On page load or when changing themes, best to add inline in `head` to avoid FOUC
@@ -64,6 +77,10 @@ export class AppComponent {
       }
     });
     
+  }
+
+  toggleSidebar() {
+    this.sidebar.toggleSidebar();
   }
 
   public clickLogin() {

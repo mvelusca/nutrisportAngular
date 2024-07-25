@@ -28,6 +28,7 @@ export class LoginComponent {
     }).subscribe({
       next: (res) => {
         this.tokenService.token = res.token as string;
+        this.authService.setLoggedIn(true);
         if (this.tokenService.userRoles.includes("USER")) {
           this.router.navigate(['admin']);
         }

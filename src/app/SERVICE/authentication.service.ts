@@ -1,6 +1,6 @@
 import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { BaseService } from './base-service';
@@ -19,6 +19,18 @@ import { Register$Params } from './register';
 export class AuthenticationService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  private loggedIn = new BehaviorSubject<boolean>(this.getInitialLoggedInState());
+  isLoggedIn$ = this.loggedIn.asObservable();
+
+  private getInitialLoggedInState(): boolean {
+    return localStorage.getItem('isLoggedIn') === 'true';
+  }
+
+  setLoggedIn(value: boolean) {
+    localStorage.setItem('isLoggedIn', value.toString());
+    this.loggedIn.next(value);
   }
 
   /** Path part for operation `register()` */
@@ -100,4 +112,6 @@ export class AuthenticationService extends BaseService {
       map((r: any): any => r.body)
     );
   }
+
+
 }

@@ -18,6 +18,8 @@ import { RouterModule } from '@angular/router';
 import { DropdownToggleDirective } from './directives/dropdown-toggle.directive';
 import { CommonModule } from '@angular/common';
 import { AriaLabelledbyDirective } from './directives/aria-labelledby.directive';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { LogoutComponent } from './logout/logout.component';
 
 
 @NgModule({ 
@@ -31,7 +33,9 @@ import { AriaLabelledbyDirective } from './directives/aria-labelledby.directive'
         HomeComponent, 
         ActivateAccountComponent,
         DropdownToggleDirective,
-        AriaLabelledbyDirective
+        AriaLabelledbyDirective,
+        SidebarComponent,
+        LogoutComponent
     ], 
     bootstrap: [ // composant de démarrage
         AppComponent,
