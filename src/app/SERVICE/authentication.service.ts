@@ -22,7 +22,10 @@ export class AuthenticationService extends BaseService {
   }
 
   private loggedIn = new BehaviorSubject<boolean>(this.getInitialLoggedInState());
+  private userId = new BehaviorSubject<number | null>(null);
+  private userMail = new BehaviorSubject<string | null>(null);
   isLoggedIn$ = this.loggedIn.asObservable();
+  userMail$ = this.userMail.asObservable();
 
   private getInitialLoggedInState(): boolean {
     return localStorage.getItem('isLoggedIn') === 'true';
@@ -31,6 +34,33 @@ export class AuthenticationService extends BaseService {
   setLoggedIn(value: boolean) {
     localStorage.setItem('isLoggedIn', value.toString());
     this.loggedIn.next(value);
+  }
+
+  setUserId(userId?: number) {
+    if (userId !== undefined) {
+      localStorage.setItem('userId', userId.toString());
+    } else {
+      // Handle the case where userId is undefined if needed
+      console.warn('Attempted to set undefined user ID');
+    }
+  }
+
+  getUserId(): number | null {
+    const userId = localStorage.getItem('userId');
+    return userId ? parseInt(userId, 10) : null;
+  }
+
+  setUserMail(mail?: string) {
+    if (mail) {
+      localStorage.setItem('userMail', mail);
+      this.userMail.next(mail);
+    } else {
+      console.warn('Attempted to set undefined user mail');
+    }
+  }
+
+  getUserMail(): string | null {
+    return localStorage.getItem('userMail');
   }
 
   /** Path part for operation `register()` */
@@ -83,7 +113,14 @@ export class AuthenticationService extends BaseService {
    */
   authenticate(params: Authenticate$Params, context?: HttpContext): Observable<AuthenticationResponse> {
     return this.authenticate$Response(params, context).pipe(
-      map((r: HttpResponse<AuthenticationResponse>): AuthenticationResponse => r.body as AuthenticationResponse)
+      map((r: HttpResponse<AuthenticationResponse>): AuthenticationResponse => {
+        if (r.body) {
+          this.setUserId(r.body.userId);
+          
+          this.setLoggedIn(true);
+        }
+        return r.body as AuthenticationResponse;
+      })
     );
   }
   
@@ -112,6 +149,5 @@ export class AuthenticationService extends BaseService {
       map((r: any): any => r.body)
     );
   }
-
 
 }

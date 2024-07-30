@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 import { AriaLabelledbyDirective } from './directives/aria-labelledby.directive';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { LogoutComponent } from './logout/logout.component';
+import { UserprofileComponent } from './userprofile/userprofile.component';
 
 
 @NgModule({ 
@@ -35,7 +36,8 @@ import { LogoutComponent } from './logout/logout.component';
         DropdownToggleDirective,
         AriaLabelledbyDirective,
         SidebarComponent,
-        LogoutComponent
+        LogoutComponent,
+        UserprofileComponent
     ], 
     bootstrap: [ // composant de démarrage
         AppComponent,
@@ -46,7 +48,8 @@ import { LogoutComponent } from './logout/logout.component';
         FormsModule,
         CodeInputModule,
         RouterModule,
-        CommonModule
+        CommonModule,
+        
     ], 
     providers: [ //services
         provideAnimationsAsync(),

@@ -10,7 +10,11 @@ import { RequestBuilder } from './request-builder';
 export interface User {
   id: number;
   nom: string;
+  prenom: string;
+  naissance: Date;
   mail: string;
+  localisation: string;
+  bio: Text;
   mdp: string;
   photo: string;
   // Ajoutez d'autres champs si nécessaire
@@ -95,6 +99,40 @@ export function deleteUser(http: HttpClient, rootUrl: string, id: number, contex
 }
 
 deleteUser.PATH = '/user/{id}';
+
+// Fonction pour effectuer la requête HTTP DELETE et supprimer un utilisateur
+export function getUserById(http: HttpClient, rootUrl: string, id: number, context?: HttpContext): Observable<HttpResponse<User>> {
+  const rb = new RequestBuilder(rootUrl, getUserById.PATH.replace('{id}', id.toString()), 'get');
+  return http.request(
+    rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context
+    })
+  ).pipe(
+    filter((r): r is HttpResponse<User> => r instanceof HttpResponse),
+    map((r: HttpResponse<User>) => r)
+  );
+}
+
+getUserById.PATH = '/user/id/{id}';
+
+// Fonction pour effectuer la requête HTTP DELETE et supprimer un utilisateur
+export function getUserByMail(http: HttpClient, rootUrl: string, mail: string, context?: HttpContext): Observable<HttpResponse<User>> {
+  const rb = new RequestBuilder(rootUrl, getUserByMail.PATH.replace('{mail}', mail.toString()), 'get');
+  return http.request(
+    rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context
+    })
+  ).pipe(
+    filter((r): r is HttpResponse<User> => r instanceof HttpResponse),
+    map((r: HttpResponse<User>) => r)
+  );
+}
+
+getUserByMail.PATH = '/user/mail/{mail}';
 
 // Fonction pour effectuer la requête HTTP POST et ajouter un utilisateur
 export function addUser(http: HttpClient, rootUrl: string, user: AddUser, context?: HttpContext): Observable<HttpResponse<AddUser>> {
@@ -264,6 +302,26 @@ export class UserService extends BaseService {
   searchUsers(query: string, context?: HttpContext): Observable<User[]> {
     return this.searchUsers$Response(query, context).pipe(
       map((r: HttpResponse<User[]>) => r.body as User[])
+    );
+  }
+
+  getUserById$Response(id: number, context?: HttpContext): Observable<HttpResponse<User>> {
+    return getUserById(this.http, this.rootUrl, id, context);
+  }
+
+  getUserById(id: number, context?: HttpContext): Observable<User> {
+    return this.getUserById$Response(id, context).pipe(
+      map((r: HttpResponse<User>) => r.body as User)
+    );
+  }
+
+  getUserByMail$Response(mail: string, context?: HttpContext): Observable<HttpResponse<User>> {
+    return getUserByMail(this.http, this.rootUrl, mail, context);
+  }
+
+  getUserByMail(mail: string, context?: HttpContext): Observable<User> {
+    return this.getUserByMail$Response(mail, context).pipe(
+      map((r: HttpResponse<User>) => r.body as User)
     );
   }
 

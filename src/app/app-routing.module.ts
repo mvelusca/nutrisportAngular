@@ -8,10 +8,12 @@ import { MembreComponent } from './MEMBRES/membre/membre.component';
 import { HomeComponent } from './home/home.component';
 import { ActivateAccountComponent } from './activate-account/activate-account.component';
 import { LogoutComponent } from './logout/logout.component';
+import { UserprofileComponent } from './userprofile/userprofile.component';
 
 const routes: Routes = [
   //{ path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'userprofile', component: UserprofileComponent },
   { path: 'register', component: RegisterComponent }, // Route pour l'inscription
   { path: 'admin', component: AdminComponent },
   { path: 'coach', component: CoachComponent },

@@ -34,12 +34,12 @@ export class AdminComponent implements OnInit {
   }
 
   /**
- * Loads the list of users from the server and updates the local `users` array.
- * @returns void - This function does not return any value.
- * @throws Error - If an error occurs while fetching the users, it will be logged to the console.
- * @description This function subscribes to the `getUsers` observable from the `UserService` and updates 
- * the local `users` array when the observable emits a new value. If an error occurs during the fetching process, it logs the error to the console.
- */
+   * Loads the list of users from the server and updates the local `users` array.
+   * @returns void - This function does not return any value.
+   * @throws Error - If an error occurs while fetching the users, it will be logged to the console.
+   * @description This function subscribes to the `getUsers` observable from the `UserService` and updates 
+   * the local `users` array when the observable emits a new value. If an error occurs during the fetching process, it logs the error to the console.
+   */
   loadUsers(page: number, size: number): void {
     this.userService.getUsersPaginate(page - 1, size).subscribe({
       next: (pageData: Page<User>) => {
@@ -71,11 +71,6 @@ export class AdminComponent implements OnInit {
       this.currentPage = page;
       this.loadUsers(this.currentPage, this.usersPerPage);
     }
-  }
-
-  editUser(userId: number): void {
-    console.log('Edit user:', userId);
-    // Add your edit logic here
   }
 
   openEditModal(user: User): void {

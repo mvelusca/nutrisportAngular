@@ -23,12 +23,18 @@ export class LoginComponent {
 
   public login() {
     this.errorMsg = [];
-    this.authService.authenticate({
-      body: this.authRequest
-    }).subscribe({
+    this.authService.authenticate({ body: this.authRequest }).subscribe({
       next: (res) => {
         this.tokenService.token = res.token as string;
-        this.authService.setLoggedIn(true);
+
+        if (res.userId) {
+          this.authService.setUserId(res.userId);
+        }
+
+        if (res.mail) {
+          this.authService.setUserMail(res.mail);
+        }
+
         if (this.tokenService.userRoles.includes("USER")) {
           this.router.navigate(['admin']);
         }
