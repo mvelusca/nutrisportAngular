@@ -21,6 +21,8 @@ import { AriaLabelledbyDirective } from './directives/aria-labelledby.directive'
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { LogoutComponent } from './logout/logout.component';
 import { UserprofileComponent } from './userprofile/userprofile.component';
+import { DashboardcardComponent } from './dashboardcard/dashboardcard.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 @NgModule({ 
@@ -37,7 +39,9 @@ import { UserprofileComponent } from './userprofile/userprofile.component';
         AriaLabelledbyDirective,
         SidebarComponent,
         LogoutComponent,
-        UserprofileComponent
+        UserprofileComponent,
+        DashboardcardComponent,
+        DashboardComponent
     ], 
     bootstrap: [ // composant de démarrage
         AppComponent,

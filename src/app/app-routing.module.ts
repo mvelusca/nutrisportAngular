@@ -9,11 +9,13 @@ import { HomeComponent } from './home/home.component';
 import { ActivateAccountComponent } from './activate-account/activate-account.component';
 import { LogoutComponent } from './logout/logout.component';
 import { UserprofileComponent } from './userprofile/userprofile.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
   //{ path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'userprofile', component: UserprofileComponent },
+  { path: 'dashboard', component: DashboardComponent},
   { path: 'register', component: RegisterComponent }, // Route pour l'inscription
   { path: 'admin', component: AdminComponent },
   { path: 'coach', component: CoachComponent },
